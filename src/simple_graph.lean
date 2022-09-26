@@ -1,4 +1,4 @@
-import combinatorics.simple_graph
+import combinatorics.simple_graph.basic
 
 open finset
 universes u v w
