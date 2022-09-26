@@ -59,7 +59,7 @@ begin
 end
 
 -- if v is adjacent to x and w is not adjacent to x, then v ≠ w
-lemma ne_of_adj_of_not_adj {v w x : V} (h : G.adj v x) (hn : ¬ G.adj w x) : v ≠ w :=
+lemma ne_of_adj_of_not_adj' {v w x : V} (h : G.adj v x) (hn : ¬ G.adj w x) : v ≠ w :=
 begin
   sorry,
 end
