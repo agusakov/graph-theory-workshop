@@ -34,14 +34,32 @@ structure simple_graph (V : Type u) :=
 Let's prove some simple lemmas about it!
 -/
 
+-- v is not adjacent to itself
+lemma irrefl' {v : V} : ¬G.adj v v := 
+begin
+  sorry,
+end
+
 -- If u is adjacent to v, then v is adjacent to u
 lemma adj_symm' (h : G.adj u v) : G.adj v u := 
 begin
   sorry,
 end
 
+-- This is just the same as the last lemma, but in an iff form
+lemma adj_comm' (u v : V) : G.adj u v ↔ G.adj v u := 
+begin
+  sorry,
+end
+
 -- If two vertices are adjacent, then they're not equal
 lemma ne_of_adj' (h : G.adj a b) : a ≠ b :=
+begin
+  sorry,
+end
+
+-- if v is adjacent to x and w is not adjacent to x, then v ≠ w
+lemma ne_of_adj_of_not_adj {v w x : V} (h : G.adj v x) (hn : ¬ G.adj w x) : v ≠ w :=
 begin
   sorry,
 end
@@ -74,6 +92,30 @@ def empty_graph' (V : Type u) : simple_graph V := {
     end }
 
 /-!
+The complement Gᶜ of a graph G is defined as a graph on V where, for every pair of vertices
+v, w that are adjacent in G, they are *NOT* adjacent in Gᶜ, and for every pair of nonadjacent
+vertices in G, they *ARE* adjacent in Gᶜ.
+
+Now, note that we have to be a bit more careful with this definition when we're talking
+about simple graphs! Remember that a graph is simple when it doesn't contain any loops,
+i.e. v is not adjacent to itself. However, if we blindly take the complement as defined above,
+v will be adjacent to itself in Gᶜ! So we have to explicitly specify that it's not adjacent
+when we take the complement.
+-/
+instance : has_compl (simple_graph V) := ⟨λ G,
+  { adj := λ v w, v ≠ w ∧ ¬G.adj v w, -- we include v ≠ w so that we're not accidentally
+                                      -- creating loops in our definition.
+    symm := 
+      begin
+        sorry,
+      end
+    loopless := 
+      begin
+        sorry,
+      end }⟩
+
+
+/-!
 You'll notice that we don't actually define a simple graph as having a distinct edge type. 
 Rather, we've made the edges implicit in the definition by saying we have an adjacency relation
 between the vertices, and then the edge type emerges from that as a set of unordered pairs of
@@ -86,6 +128,8 @@ Tricky problem: See if you can prove that two vertices are adjacent if and only 
 corresponding element in the edge set of G! (Hint: I've included some helper lemmas!)
 -/
 
+-- vertices v, w are adjacent iff v is not equal to w and there is an edge in G 
+-- such that v, w ∈ e
 lemma adj_iff_exists_edge' {v w : V} :
   G.adj v w ↔ v ≠ w ∧ ∃ (e ∈ G.edge_set), v ∈ e ∧ w ∈ e :=
 begin
@@ -100,6 +144,7 @@ def neighbor_set (v : V) : set V := set_of (G.adj v)
 ```
 -/
 
+-- a vertex w is in the neighbor set of vertex v iff v and w are adjacent
 lemma mem_neighbor_set' (v w : V) : w ∈ G.neighbor_set v ↔ G.adj v w :=
 begin
   sorry,
@@ -111,26 +156,25 @@ def incidence_set (v : V) : set (sym2 V) := {e ∈ G.edge_set | v ∈ e}
 ```
 -/
 
+-- the incidence set of a vertex is a subset of the graph's edge set
 lemma incidence_set_subset' (v : V) : G.incidence_set v ⊆ G.edge_set :=
 begin
   sorry,
 end
 
-lemma mk_mem_incidence_set_left_iff' : ⟦(a, b)⟧ ∈ G.incidence_set a ↔ G.adj a b :=
+-- an edge vw is in the incidence set of v iff v and w are adjacent
+lemma mk_mem_incidence_set_left_iff' : ⟦(v, w)⟧ ∈ G.incidence_set v ↔ G.adj v w :=
 begin
   sorry,
 end
 
-lemma mk_mem_incidence_set_right_iff' : ⟦(a, b)⟧ ∈ G.incidence_set b ↔ G.adj a b :=
+-- an edge vw is in the incidence set of w iff v and w are adjacent
+lemma mk_mem_incidence_set_right_iff' : ⟦(v, w)⟧ ∈ G.incidence_set w ↔ G.adj v w :=
 begin
   sorry,
 end
 
-lemma mem_incidence_set' (v w : V) : ⟦(v, w)⟧ ∈ G.incidence_set v ↔ G.adj v w :=
-begin
-  sorry,
-end
-
+-- an edge vw is in the incidence set of v iff w is in the neighbor set of v
 lemma mem_incidence_iff_neighbor' {v w : V} : ⟦(v, w)⟧ ∈ G.incidence_set v ↔ w ∈ G.neighbor_set v :=
 begin
   sorry,
